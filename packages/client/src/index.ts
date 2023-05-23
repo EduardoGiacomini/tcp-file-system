@@ -5,7 +5,7 @@ const port = 3000;
 
 const client = net.createConnection(port, host, () => {
   console.log("Connected");
-  client.write("add,1,1");
+  client.write("rm,/aloha1");
 });
 
 client.on("data", (data: string) => {
