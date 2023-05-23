@@ -1,0 +1,19 @@
+{
+  "name": "tcp-file-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EduardoGiacomini/tcp-file-system.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EduardoGiacomini/tcp-file-system/issues"
+  },
+  "homepage": "https://github.com/EduardoGiacomini/tcp-file-system#readme",
+  "devDependencies": {}
+}
