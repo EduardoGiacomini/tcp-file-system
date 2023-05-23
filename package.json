@@ -15,5 +15,7 @@
     "url": "https://github.com/EduardoGiacomini/tcp-file-system/issues"
   },
   "homepage": "https://github.com/EduardoGiacomini/tcp-file-system#readme",
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/node": "^20.2.3"
+  }
 }
