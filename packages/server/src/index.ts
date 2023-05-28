@@ -1,38 +1,35 @@
 import net from "node:net";
-import { rm } from 'fs/promises';
-import { resolve } from 'path';
-
-const port = 3000;
-const FILE_SYSTEM_PATH = './file-system'
+import { PORT } from "./env";
+import { Command } from "./types";
+import { removePath, createDirectory } from "./commands";
 
 const server = net.createServer((socket) => {
   console.log("Client connected");
 
   socket.on("data", (data) => {
-   try {
-    const strData = data.toString();
-    console.log(`Received: ${strData}`);
+    try {
+      const request = data.toString();
+      console.log(`Request received: ${request}`);
 
-    const command = strData.split(",");
-    const operator = command[0];
-    const args1 = command[1];
-    const args2 = command[2];
-    let result;
+      const [command, argument] = request.split(",");
 
-    switch (operator) {
-      case "ls":
-        break;
-      case "up":
-        break;
-      case "rm":
-        removePath(args1);
-        break;
+      switch (command) {
+        case Command.LS:
+          break;
+        case Command.RM:
+          removePath(argument);
+          break;
+        case Command.MKDIR:
+          createDirectory(argument);
+          break;
+        default:
+          break;
+      }
+
+      socket.write("SUCCESS : )");
+    } catch (error) {
+      socket.write(`Something went wrong : (\n${(error as Error).message}`);
     }
-
-    socket.write("SUCCESS : )");
-   } catch (error) {
-    socket.write(`Something went wrong : (\n${(error as Error).message}`);
-   }
   });
 
   socket.on("end", () => {
@@ -48,15 +45,6 @@ server.on("error", (error) => {
   console.log(`Server Error: ${error.message}`);
 });
 
-server.listen(port, () => {
-  console.log(`TCP socket server is running on port: ${port}`);
+server.listen(PORT, () => {
+  console.log(`TCP socket server is running on port: ${PORT}`);
 });
-
-async function removePath(pathToRemove: string): Promise<void> {
-  const fullPath = resolve(`${FILE_SYSTEM_PATH}${pathToRemove}`);
-  try {
-    await rm(fullPath, { recursive: true });
-  } catch (error) {
-    throw Error(`Failed to delete directory: ${fullPath}`);
-  }
-}
