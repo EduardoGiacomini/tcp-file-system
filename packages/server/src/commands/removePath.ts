@@ -1,6 +1,10 @@
 import { rm } from "node:fs/promises";
 import { buildPath } from "../utils";
 
+/**
+ * Given the directory name or path, remove all files and directories recursively.
+ * @param path the directory or file path.
+ */
 export async function removePath(pathToRemove: string): Promise<void> {
   const fullPath = buildPath(pathToRemove);
   try {
