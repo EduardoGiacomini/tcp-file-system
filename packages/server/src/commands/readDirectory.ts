@@ -7,6 +7,10 @@ interface Output {
   type: File;
 }
 
+/**
+ * Given the directory name or path, reads all files and directories.
+ * @param path the directory name or path.
+ */
 export async function readDirectory(path: string): Promise<Array<Output>> {
   const fullPath = buildPath(path);
   try {

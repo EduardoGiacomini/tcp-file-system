@@ -3,7 +3,7 @@ import { buildPath } from "../utils";
 
 /**
  * Given the directory name or path, creates the directory recursivelly.
- * @param path the directory name or path
+ * @param path the directory name or path.
  */
 export async function createDirectory(path: string): Promise<void> {
   const fullPath = buildPath(path);
