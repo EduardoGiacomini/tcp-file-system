@@ -6,7 +6,7 @@ import { removePath, createDirectory } from "./commands";
 const server = net.createServer((socket) => {
   console.log("Client connected");
 
-  socket.on("data", (data) => {
+  socket.on("data", async (data) => {
     try {
       const request = data.toString();
       console.log(`Request received: ${request}`);
@@ -17,10 +17,10 @@ const server = net.createServer((socket) => {
         case Command.LS:
           break;
         case Command.RM:
-          removePath(argument);
+          await removePath(argument);
           break;
         case Command.MKDIR:
-          createDirectory(argument);
+          await createDirectory(argument);
           break;
         default:
           break;
