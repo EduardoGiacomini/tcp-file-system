@@ -12,24 +12,24 @@ export function buildPath(path: string): string {
 }
 
 /**
- * Given an input buffer, it splits the command and argument.
+ * Given an input buffer, it read as JSON and split command and argument.
  * @param data buffer send from TCP client.
- * @returns the requested command and important arguments.
+ * @returns requested command and arguments.
  */
 export function parseRequest(data: Buffer): {
   command: Command;
   argument: string;
 } {
-  const [command, argument] = data.toString().split(",");
+  const { command, argument } = JSON.parse(data.toString());
   return { command: command as Command, argument };
 }
 
 /**
- * Given the output data object, it builds the response as JSON string.
+ * Given output data object, it builds the response as JSON buffer.
  * @param status success or error.
  * @param data data to send to TCP client.
- * @returns output parsed as JSON string with status and data keys.
+ * @returns output parsed as JSON buffer with status and data keys.
  */
-export function parseResponse(status: ResponseStatus, data?: object): string {
-  return JSON.stringify({ status, data });
+export function parseResponse(status: ResponseStatus, data?: object): Buffer {
+  return Buffer.from(JSON.stringify({ status, data }), "utf-8");
 }
