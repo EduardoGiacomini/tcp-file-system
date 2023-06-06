@@ -1,20 +1,25 @@
 import net from "node:net";
 import { PORT } from "./env";
-import { Command } from "./types";
-import { removePath, createDirectory } from "./commands";
+import { Command, ResponseStatus } from "./types";
+import { removePath, createDirectory, readDirectory } from "./commands";
+import { parseRequest, parseResponse } from "./utils";
 
 const server = net.createServer((socket) => {
   console.log("Client connected");
 
   socket.on("data", async (data) => {
     try {
-      const request = data.toString();
-      console.log(`Request received: ${request}`);
-
-      const [command, argument] = request.split(",");
+      console.log(`Request received: ${data}`);
+      const { command, argument } = parseRequest(data);
 
       switch (command) {
         case Command.LS:
+          const filesAndDirectories = await readDirectory(argument);
+          const response = parseResponse(
+            ResponseStatus.SUCCESS,
+            filesAndDirectories
+          );
+          socket.write(response);
           break;
         case Command.RM:
           await removePath(argument);
@@ -25,8 +30,6 @@ const server = net.createServer((socket) => {
         default:
           break;
       }
-
-      socket.write("SUCCESS : )");
     } catch (error) {
       socket.write(`Something went wrong : (\n${(error as Error).message}`);
     }

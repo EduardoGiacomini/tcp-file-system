@@ -10,3 +10,20 @@ export enum Command {
   RM = "rm",
   MKDIR = "mkdir",
 }
+
+/**
+ * Defines type for items found in a directory path.
+ */
+export enum File {
+  FILE = "file",
+  DIRECTORY = "directory",
+}
+
+/**
+ * Defines the response type for a TCP request send by
+ * client.
+ */
+export enum ResponseStatus {
+  SUCCESS = "success",
+  ERROR = "error",
+}
