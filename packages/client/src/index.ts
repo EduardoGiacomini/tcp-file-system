@@ -5,7 +5,7 @@ const port = 3000;
 
 const client = net.createConnection(port, host, async () => {
   console.log("Connected");
-  client.write("ls,");
+  client.write('{"command":"ls","argument":""}');
 });
 
 client.on("data", (data: string) => {
