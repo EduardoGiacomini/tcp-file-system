@@ -19,6 +19,7 @@ export function buildPath(path: string): string {
 export function parseRequest(data: Buffer): Request | undefined {
 try {
   const stringData = data.toString();
+  // ignored due to the case of processing the file in chunks
   if (!stringData.toString().includes('command')) {
     return;
   }
