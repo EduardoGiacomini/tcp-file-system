@@ -12,32 +12,33 @@ cli
   .command("ls")
   .description("Lists all files and directories")
   .argument("[path]", "directory name", "")
-  .action((argument) => {
-    ls(argument);
+  .action((path) => {
+    ls(path);
   });
 
 cli
   .command("mkdir")
   .description("Creates a directory")
-  .argument("<directory or path>", "directory name")
-  .action((argument) => {
-    mkdir(argument);
+  .argument("<path>", "directory name")
+  .action((path) => {
+    mkdir(path);
   });
 
 cli
   .command("rm")
   .description("Removes a directory recursively or file")
   .argument("<path>", "directory or file name")
-  .action((argument) => {
-    rm(argument);
+  .action((path) => {
+    rm(path);
   });
 
 cli
   .command("save")
   .description("Upload file")
-  .argument("<string>", "directory or file name")
-  .action((argument) => {
-    save(argument);
+  .argument("<path to upload>", "file path to upload")
+  .argument("<path to save>", "path to save")
+  .action((pathToUpload, pathToSave) => {
+    save(pathToUpload, pathToSave);
   });
 
 cli.parse(process.argv);

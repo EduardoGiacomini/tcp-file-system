@@ -6,13 +6,13 @@ import { parseRequest, parseResponse } from "./utils";
 import { saveFile } from "./commands/saveFile";
 
 const server = net.createServer((socket) => {
-  console.log("Client connected");
+  console.log("-- Client connected");
 
   socket.on("data", async (data) => {
     try {
       const request = parseRequest(data);
       if (request === undefined) return;
-      console.log(`Request received: ${data}`);
+      console.log(`-- Request received: ${data}`);
       const { command, argument } = request;
 
       switch (command) {
@@ -53,45 +53,60 @@ const server = net.createServer((socket) => {
             break;
           }
         case Command.SAVE:
-          const { fileSize, pathToSave, fileName } =
-            argument as unknown as SaveArgument;
-          let receivedData = Buffer.alloc(0);
-          socket.on("data", async (data) => {
-            receivedData = Buffer.concat([receivedData!, data]);
+          try {
+            const { size, destination } = argument as unknown as SaveArgument;
 
-            if (receivedData.length !== fileSize) {
-              return;
-            }
+            // It is necessary allocate a buffer for large files
+            let buffer = Buffer.alloc(0);
 
-            await saveFile(pathToSave, fileName, receivedData).then(() => {
-              const response = parseResponse(ResponseStatus.SUCCESS, {
-                message: `File ${fileName} saved successfully`,
-              });
+            socket.on("data", async (data) => {
+              buffer = Buffer.concat([buffer!, data]);
+
+              // Wait next chunks to complete all file size
+              if (buffer.length !== size) {
+                console.log("-- Received chunk");
+                return;
+              }
+
+              await saveFile(destination, buffer);
+              const response = parseResponse(ResponseStatus.SUCCESS);
               socket.write(response);
             });
-          });
-          break;
+          } catch (error: any) {
+            const response = parseResponse(ResponseStatus.ERROR, error.message);
+            socket.write(response);
+          } finally {
+            break;
+          }
         default:
-          throw Error(`The given command ${command} is not supported.`);
+          const response = parseResponse(
+            ResponseStatus.ERROR,
+            `${command} is not supported`
+          );
+          socket.write(response);
       }
     } catch (error) {
-      socket.write(`Something went wrong : (\n${(error as Error).message}`);
+      const response = parseResponse(
+        ResponseStatus.ERROR,
+        `Something went wrong: ${(error as Error).message}`
+      );
+      socket.write(response);
     }
   });
 
   socket.on("end", () => {
-    console.log("Client disconnected");
+    console.log("-- Client disconnected");
   });
 
   socket.on("error", (error) => {
-    console.log(`Socket Error: ${error.message}`);
+    console.log(`-- Socket Error: ${error.message}`);
   });
 });
 
 server.on("error", (error) => {
-  console.log(`Server Error: ${error.message}`);
+  console.log(`-- Server Error: ${error.message}`);
 });
 
 server.listen(PORT, () => {
-  console.log(`TCP socket server is running on port: ${PORT}`);
+  console.log(`-- TCP socket server is running on port: ${PORT}`);
 });

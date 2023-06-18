@@ -22,6 +22,7 @@ export async function mkdir(path: string): Promise<void> {
 
   client.on("timeout", () => {
     console.log("-- Connection timeout");
+    client.destroy();
   });
 
   client.on("error", (error: Error) => {

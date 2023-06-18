@@ -15,7 +15,7 @@ export enum Command {
 
 export type Request = {
   command: Command;
-  argument: string;
+  argument: string | Buffer | object;
 };
 
 export type Response = {

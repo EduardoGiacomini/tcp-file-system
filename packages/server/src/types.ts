@@ -33,10 +33,9 @@ export enum ResponseStatus {
 export type Request = {
   command: Command;
   argument: string;
-}
+};
 
 export type SaveArgument = {
-  fileSize: number,
-  pathToSave: string,
-  fileName: string;
-}
+  size: number;
+  destination: string;
+};

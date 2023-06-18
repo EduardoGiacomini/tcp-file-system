@@ -8,3 +8,7 @@ export function parseResponse(response: Buffer): Response {
   const { status, data } = JSON.parse(response.toString());
   return { status, data };
 }
+
+export function wait(milliseconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
