@@ -1,6 +1,6 @@
 import net from "node:net";
 import { PORT } from "./env";
-import { Command, ResponseStatus, Request, SaveArgument } from './types';
+import { Command, ResponseStatus, Request, SaveArgument } from "./types";
 import { removePath, createDirectory, readDirectory } from "./commands";
 import { parseRequest, parseResponse } from "./utils";
 import { saveFile } from "./commands/saveFile";
@@ -17,39 +17,58 @@ const server = net.createServer((socket) => {
 
       switch (command) {
         case Command.LS:
-          const filesAndDirectories = await readDirectory(argument);
-          const response = parseResponse(
-            ResponseStatus.SUCCESS,
-            filesAndDirectories
-          );
-          socket.write(response);
-          break;
+          try {
+            const filesAndDirectories = await readDirectory(argument);
+            const response = parseResponse(
+              ResponseStatus.SUCCESS,
+              filesAndDirectories
+            );
+            socket.write(response);
+          } catch (error: any) {
+            const response = parseResponse(ResponseStatus.ERROR, error.message);
+            socket.write(response);
+          } finally {
+            break;
+          }
         case Command.RM:
-          await removePath(argument);
-          break;
+          try {
+            await removePath(argument);
+            const response = parseResponse(ResponseStatus.SUCCESS);
+            socket.write(response);
+          } catch (error: any) {
+            const response = parseResponse(ResponseStatus.ERROR, error.message);
+            socket.write(response);
+          } finally {
+            break;
+          }
         case Command.MKDIR:
-          await createDirectory(argument);
-          break;
+          try {
+            await createDirectory(argument);
+            const response = parseResponse(ResponseStatus.SUCCESS);
+            socket.write(response);
+          } catch (error: any) {
+            const response = parseResponse(ResponseStatus.ERROR, error.message);
+            socket.write(response);
+          } finally {
+            break;
+          }
         case Command.SAVE:
-          const { fileSize, pathToSave, fileName } = argument as unknown as SaveArgument;
+          const { fileSize, pathToSave, fileName } =
+            argument as unknown as SaveArgument;
           let receivedData = Buffer.alloc(0);
-          socket.on('data', async data => {
+          socket.on("data", async (data) => {
             receivedData = Buffer.concat([receivedData!, data]);
 
             if (receivedData.length !== fileSize) {
               return;
             }
 
-            await saveFile(
-              pathToSave,
-              fileName,
-              receivedData
-            ).then(() => {
-              const response = parseResponse(ResponseStatus.SUCCESS,
-                 { message: `File ${fileName} saved successfully` });
+            await saveFile(pathToSave, fileName, receivedData).then(() => {
+              const response = parseResponse(ResponseStatus.SUCCESS, {
+                message: `File ${fileName} saved successfully`,
+              });
               socket.write(response);
-            }
-            );
+            });
           });
           break;
         default:

@@ -17,17 +17,17 @@ export function buildPath(path: string): string {
  * @returns requested command and arguments.
  */
 export function parseRequest(data: Buffer): Request | undefined {
-try {
-  const stringData = data.toString();
-  // ignored due to the case of processing the file in chunks
-  if (!stringData.toString().includes('command')) {
-    return;
+  try {
+    const stringData = data.toString();
+    // ignored due to the case of processing the file in chunks
+    if (!stringData.toString().includes("command")) {
+      return;
+    }
+    const { command, argument } = JSON.parse(stringData);
+    return { command: command as Command, argument };
+  } catch (error) {
+    throw Error(`Error in request parsing ${error}`);
   }
-  const { command, argument } = JSON.parse(stringData);
-  return { command: command as Command, argument };
-} catch (error) {
-  throw Error(`Error in request parsing ${error}`)
-}
 }
 
 /**
@@ -36,6 +36,6 @@ try {
  * @param data data to send to TCP client.
  * @returns output parsed as JSON buffer with status and data keys.
  */
-export function parseResponse(status: ResponseStatus, data?: object): Buffer {
+export function parseResponse(status: ResponseStatus, data?: any): Buffer {
   return Buffer.from(JSON.stringify({ status, data }), "utf-8");
 }
