@@ -133,4 +133,4 @@ dist
 .DS_Store
 
 # File System Workdir
-workdir/*
+packages/server/workdir/*
