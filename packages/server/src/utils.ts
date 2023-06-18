@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { BASE_PATH } from "./env";
-import { Command, ResponseStatus } from "./types";
+import { Command, Request, ResponseStatus } from "./types";
 
 /**
  * Build the correct path using the base directory set by env var.
@@ -16,12 +16,17 @@ export function buildPath(path: string): string {
  * @param data buffer send from TCP client.
  * @returns requested command and arguments.
  */
-export function parseRequest(data: Buffer): {
-  command: Command;
-  argument: string;
-} {
-  const { command, argument } = JSON.parse(data.toString());
+export function parseRequest(data: Buffer): Request | undefined {
+try {
+  const stringData = data.toString();
+  if (!stringData.toString().includes('command')) {
+    return;
+  }
+  const { command, argument } = JSON.parse(stringData);
   return { command: command as Command, argument };
+} catch (error) {
+  throw Error(`Error in request parsing ${error}`)
+}
 }
 
 /**

@@ -4,11 +4,13 @@
  * ls: list all directories and files recursivelly.
  * rm: remove a file or a directory.
  * mkdir: create a new directory.
+ * save: save a new file in an existing directory
  */
 export enum Command {
   LS = "ls",
   RM = "rm",
   MKDIR = "mkdir",
+  SAVE = "save",
 }
 
 /**
@@ -26,4 +28,15 @@ export enum File {
 export enum ResponseStatus {
   SUCCESS = "success",
   ERROR = "error",
+}
+
+export type Request = {
+  command: Command;
+  argument: string;
+}
+
+export type SaveArgument = {
+  fileSize: number,
+  pathToSave: string,
+  fileName: string;
 }
