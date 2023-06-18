@@ -31,8 +31,6 @@ const client = net.createConnection(port, host, async () => {
       client.write(contents);
     }
  });
-  
-  // client.write('{"command":"save","argument":""}');
 });
 
 client.on("data", (data: string) => {
