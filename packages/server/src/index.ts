@@ -44,7 +44,12 @@ const server = net.createServer((socket) => {
               pathToSave,
               fileName,
               receivedData
-            ).then(() => socket.write(`File ${fileName} saved successfully`));
+            ).then(() => {
+              const response = parseResponse(ResponseStatus.SUCCESS,
+                 { message: `File ${fileName} saved successfully` });
+              socket.write(response);
+            }
+            );
           });
           break;
         default:
