@@ -15,7 +15,7 @@ export async function saveFile(pathToSave: string, fileName: string, file: Buffe
                  console.error(err);
                  throw Error(err.message);
             }
-            console.log("Saved " + fileName + ".");
+            console.log(`Saved ${fileName}.`);
         });
     } catch (error) {
         throw Error(`Failed to save file: ${error}`);
