@@ -1,0 +1,29 @@
+{
+  "artificialDelayMilliseconds": 700,
+  "keepExistingTerminalsOpen": false,
+  "runOnStartup": true,
+  "terminals": [
+    {
+      "splitTerminals": [
+        {
+          "name": "TCP File System (Server)",
+          "commands": ["npm --prefix packages/server run start:dev"],
+          "shouldRunCommands": false
+        },
+        {
+          "name": "TCP File System (App)",
+          "commands": ["npm --prefix packages/client run start:dev"],
+          "shouldRunCommands": false
+        }
+      ]
+    },
+    {
+      "splitTerminals": [
+        {
+          "name": "Git",
+          "commands": ["git st"]
+        }
+      ]
+    }
+  ]
+}

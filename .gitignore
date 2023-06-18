@@ -131,4 +131,7 @@ dist
 .pnp.*
 
 .DS_Store
-.vscode
+
+# File System Workdir
+workdir/*
+!workdir/.gitkeep
