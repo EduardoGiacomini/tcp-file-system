@@ -1,5 +1,5 @@
 # TCP File System (Client and Server)
-## Princiapais Funcionalidades
+## Principais Funcionalidades
 - Criar um diretório no servidor;
 - Remover um diretório servidor;
 - Listar os diretórios e arquivos salvos no servidor;
