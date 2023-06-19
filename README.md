@@ -11,6 +11,7 @@ npm --prefix packages/server run start:dev; # Inicia a execução do servidor
 Compile e execute o cliente:
 ```
 npm --prefix packages/client install # Instala as dependências do sistema
+npm --prefix packages/client run build # Builda o cliente
 node packages/client/build/index.js help # Lista os comandos disponíveis
 node packages/client/build/index.js --version # Exibe a versão do CLI
 node packages/client/build/index.js ls # Lista os diretórios e arquivos criados/salvos no servidor
