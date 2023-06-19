@@ -131,4 +131,6 @@ dist
 .pnp.*
 
 .DS_Store
-.vscode
+
+# File System Workdir
+packages/server/workdir/*

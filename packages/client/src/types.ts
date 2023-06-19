@@ -13,13 +13,15 @@ export enum Command {
   SAVE = "save",
 }
 
-/**
- * Defines type for items found in a directory path.
- */
-export enum File {
-  FILE = "file",
-  DIRECTORY = "directory",
-}
+export type Request = {
+  command: Command;
+  argument: string | Buffer | object;
+};
+
+export type Response = {
+  status: ResponseStatus;
+  data?: any;
+};
 
 /**
  * Defines the response type for a TCP request send by
@@ -29,13 +31,3 @@ export enum ResponseStatus {
   SUCCESS = "success",
   ERROR = "error",
 }
-
-export type Request = {
-  command: Command;
-  argument: string;
-};
-
-export type SaveArgument = {
-  size: number;
-  destination: string;
-};

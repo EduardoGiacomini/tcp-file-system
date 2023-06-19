@@ -8,10 +8,10 @@ import { buildPath } from "../utils";
 export async function createDirectory(path: string): Promise<void> {
   const fullPath = buildPath(path);
   try {
-    console.log(`Creating directory ${path}`);
+    console.log(`-- Creating directory ${path}`);
     await mkdir(fullPath, { recursive: true });
-    console.log(`Directory ${path} created`);
+    console.log(`-- Directory ${path} created`);
   } catch (error) {
-    throw Error(`Failed to create directory: ${fullPath}`);
+    throw Error(`-- Failed to create directory: ${fullPath}`);
   }
 }

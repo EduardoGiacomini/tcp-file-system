@@ -1,50 +1,44 @@
-const net = require("node:net");
-import { resolve } from "node:path";
+import { Command } from "commander";
+import { ls, mkdir, rm, save } from "./commands";
 
-import fs from 'fs';
+const cli = new Command();
 
-const host = "127.0.0.1";
-const port = 3000;
+cli
+  .name("TCP File System")
+  .description("CLI to use remote File System")
+  .version("1.0.0");
 
-const client = net.createConnection(port, host, async () => {
-  console.log("Connected");
-  const fileName = 'description.pdf';
-  const value = resolve(`./files/${fileName}`);
-  const saveArgument = {
-    fileSize: 0,
-    pathToSave: '',
-    fileName
-  }
+cli
+  .command("ls")
+  .description("Lists all files and directories")
+  .argument("[path]", "directory name", "")
+  .action((path) => {
+    ls(path);
+  });
 
-  fs.readFile(value, async (err, contents) => {
-    if (err) {
-      if (err.code == 'ENOENT') {
-        client.write(`File not exist: ${value}`); 
-      } else {
-        client.error(err);
-      }
-    } else {
-      saveArgument.fileSize = contents.length;
-      saveArgument.pathToSave = './novo';
-      client.write(`{"command":"save","argument": ${JSON.stringify(saveArgument)}}`); // Send file to client
-      await wait(300);
-      client.write(contents);
-    }
- });
-});
+cli
+  .command("mkdir")
+  .description("Creates a directory")
+  .argument("<path>", "directory name")
+  .action((path) => {
+    mkdir(path);
+  });
 
-client.on("data", (data: string) => {
-  console.log(`Received: ${data}`);
-});
+cli
+  .command("rm")
+  .description("Removes a directory recursively or file")
+  .argument("<path>", "directory or file name")
+  .action((path) => {
+    rm(path);
+  });
 
-client.on("error", (error: Error) => {
-  console.log(`Error: ${error.message}`);
-});
+cli
+  .command("save")
+  .description("Upload file")
+  .argument("<path to upload>", "file path to upload")
+  .argument("<path to save>", "path to save")
+  .action((pathToUpload, pathToSave) => {
+    save(pathToUpload, pathToSave);
+  });
 
-client.on("close", () => {
-  console.log("Connection closed");
-});
-
-function wait(milliseconds: number) {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
+cli.parse(process.argv);
