@@ -1,6 +1,6 @@
 # TCP File System (Client and Server)
 
-# Exemplo de uso
+## Exemplo de uso
 
 Execute o servidor:
 ```
